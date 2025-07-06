@@ -1,0 +1,117 @@
+ <!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>CLICKKING 👑</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #222;
+      color: white;
+      font-family: sans-serif;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      flex-direction: column;
+    }
+
+    #counter {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    #milestone {
+      position: absolute;
+      top: 20%;
+      text-align: center;
+      font-size: 2rem;
+      color: white;
+      display: none;
+      animation: pop 0.5s ease-out;
+    }
+
+    .crown {
+      font-size: 5rem;
+    }
+
+    #resetBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body onclick="handleClick()">
+  <div id="counter">Clic: 0</div>
+  <div id="milestone">
+    <div class="crown">👑</div>
+    <div id="milestoneText"></div>
+  </div>
+  <button id="resetBtn" onclick="resetCounter(event)">Reset</button>
+
+  <script>
+    let clicks = 0;
+    const counter = document.getElementById("counter");
+    const milestone = document.getElementById("milestone");
+    const milestoneText = document.getElementById("milestoneText");
+
+    const specialMilestones = [5, 10, 20, 50];
+
+    function getRandomColor() {
+      const hue = Math.floor(Math.random() * 360);
+      return `hsl(${hue}, 70%, 50%)`;
+    }
+
+    function handleClick() {
+      clicks++;
+      document.body.style.backgroundColor = getRandomColor();
+      updateCounter();
+
+      if (isMilestone(clicks)) {
+        showMilestone(clicks);
+      }
+    }
+
+    function isMilestone(number) {
+      return specialMilestones.includes(number) || (number > 50 && number % 50 === 0);
+    }
+
+    function updateCounter() {
+      counter.textContent = `Clic: ${clicks}`;
+    }
+
+    function showMilestone(number) {
+      const next = number < 50
+        ? specialMilestones.find(n => n > number) || 50
+        : number + 50;
+
+      milestoneText.textContent = `Hai raggiunto ${number} clic! Prossimo traguardo: ${next}`;
+      milestone.style.display = "block";
+      milestone.style.animation = "pop 0.5s ease-out";
+
+      setTimeout(() => {
+        milestone.style.display = "none";
+      }, 3000);
+    }
+
+    function resetCounter(event) {
+      event.stopPropagation(); // evita che il reset conti come clic
+      clicks = 0;
+      updateCounter();
+    }
+  </script>
+</body>
+</html>
